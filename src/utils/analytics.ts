@@ -8,7 +8,7 @@ export const pushToDataLayer = (eventName: string, payload: Record<string, any> 
     });
     
     // For local debugging
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
         console.log(`[GTM] Event Pushed: ${eventName}`, payload);
     }
 };
