@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { ExternalLink, Github } from 'lucide-react';
 import GlitchText from '../Effects/GlitchText';
-
+import { pushToDataLayer } from '../../utils/analytics';
 const projects = [
     {
         id: 1,
@@ -151,7 +151,10 @@ const ProjectGrid = () => {
                     {categories.map((category) => (
                         <button
                             key={category}
-                            onClick={() => setActiveFilter(category)}
+                            onClick={() => {
+                                setActiveFilter(category);
+                                pushToDataLayer('project_filter', { filter_category: category });
+                            }}
                             className={`font-mono text-sm px-6 py-2 rounded uppercase tracking-widest transition-all duration-300 border-2
                                 ${activeFilter === category
                                     ? (isUpsideDown ? 'bg-blue-600/20 border-blue-500 text-blue-300 shadow-[0_0_15px_rgba(58,134,255,0.4)]' : 'bg-red-600/20 border-red-600 text-red-300 shadow-[0_0_15px_rgba(231,29,54,0.4)]')

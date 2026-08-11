@@ -8,11 +8,14 @@ import Home from './pages/Home';
 import BlogList from './pages/BlogList';
 import BlogPost from './pages/BlogPost';
 
+import PageTracker from './components/Analytics/PageTracker';
+
 function App() {
     return (
         <ThemeProvider>
             <SoundProvider>
                 <Router>
+                    <PageTracker />
                     <GlobalLayout>
                         <Navbar />
                         <Routes>

@@ -7,11 +7,19 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+import { pushToDataLayer } from '../utils/analytics';
+
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isUpsideDown, setIsUpsideDown] = useState(false);
 
     const toggleUpsideDown = () => {
-        setIsUpsideDown(prev => !prev);
+        setIsUpsideDown(prev => {
+            const newState = !prev;
+            pushToDataLayer('theme_toggle', {
+                theme_state: newState ? 'upside_down' : 'right_side_up'
+            });
+            return newState;
+        });
     };
 
     useEffect(() => {

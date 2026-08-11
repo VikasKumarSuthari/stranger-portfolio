@@ -74,6 +74,8 @@ const TerminalLine: React.FC<{
     );
 };
 
+import { pushToDataLayer } from '../../utils/analytics';
+
 const ContactTerminal = () => {
     const { isUpsideDown } = useTheme();
     const [formState, setFormState] = useState({ name: '', message: '' });
@@ -86,6 +88,9 @@ const ContactTerminal = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        pushToDataLayer('contact_submit', {
+            contact_name: formState.name
+        });
         setShowStatic(true);
         setTimeout(() => {
             setShowStatic(false);

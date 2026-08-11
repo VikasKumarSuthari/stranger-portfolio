@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
+import { pushToDataLayer } from '../../utils/analytics';
 
 const ICONS = ['👾', '🔦', '📻', '🧇', '🎄', '🔬', '🧪', '🌀'];
 
@@ -56,15 +57,23 @@ const MemoryMatch: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     useEffect(() => {
         if (matches === ICONS.length && matches > 0) {
             setGameWon(true);
+            pushToDataLayer('game_complete', {
+                game_name: 'memory_match',
+                score: moves,
+                time_seconds: timer
+            });
         }
-    }, [matches]);
+    }, [matches, moves, timer]);
 
     const handleCardClick = (index: number) => {
         if (isLocked) return;
         if (cards[index].isFlipped || cards[index].isMatched) return;
         if (flippedIndices.includes(index)) return;
 
-        if (!gameStarted) setGameStarted(true);
+        if (!gameStarted) {
+            setGameStarted(true);
+            pushToDataLayer('game_start', { game_name: 'memory_match' });
+        }
 
         const newCards = [...cards];
         newCards[index].isFlipped = true;

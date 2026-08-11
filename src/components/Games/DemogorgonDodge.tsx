@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
+import { pushToDataLayer } from '../../utils/analytics';
 
 interface Player {
     x: number;
@@ -64,6 +65,7 @@ const DemogorgonDodge: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         game.difficulty = 1;
         setScore(0);
         setGameState('playing');
+        pushToDataLayer('game_start', { game_name: 'demogorgon_dodge' });
     }, []);
 
     const requestSensorAccess = async () => {
@@ -280,12 +282,15 @@ const DemogorgonDodge: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 ctx.fill();
                 ctx.restore();
 
-                // Check collision with player
                 if (checkCollision(p, enemy)) {
                     spawnParticles(p.x + p.width / 2, p.y + p.height / 2, accentColor, 30);
                     setGameState('dead');
                     const finalScore = game.score;
                     setHighScore(prev => Math.max(prev, finalScore));
+                    pushToDataLayer('game_complete', {
+                        game_name: 'demogorgon_dodge',
+                        score: finalScore
+                    });
                     return false;
                 }
 

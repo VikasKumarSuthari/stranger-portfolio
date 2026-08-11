@@ -4,6 +4,7 @@ import { useSoundEffects } from '../../components/Audio/SoundManager';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { pushToDataLayer } from '../../utils/analytics';
 
 const Navbar = () => {
     const { playHover, playClick, isMuted, toggleMute } = useSoundEffects();
@@ -22,6 +23,7 @@ const Navbar = () => {
 
     const handleNav = (target: string, isRoute?: boolean) => {
         playClick();
+        pushToDataLayer('nav_click', { nav_target: target, is_route: isRoute });
         if (isRoute) {
             navigate(target);
         } else {
